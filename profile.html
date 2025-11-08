@@ -1,31 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MySNS — プロフィール</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySNS - プロフィール</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-<script src="script.js" defer></script>
 </head>
 <body>
-<header class="topbar"><a href="index.html">← 戻る</a></header>
-<main class="container single">
-<div class="panel" id="profilePanel">
-<h2 id="profileName">—</h2>
-<p id="profileBio"></p>
-<div>
-<button id="followBtn">フォロー</button>
-<span id="followersCount"></span> フォロワー
-</div>
-</div>
 
+<h1>プロフィール</h1>
+<div id="profileInfo"></div>
+<button onclick="logout()">ログアウト</button>
 
-<div class="panel">
-<h3>投稿</h3>
-<div id="profilePosts"></div>
-</div>
-</main>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="script.js"></script>
+
+<script>
+if (!localStorage.getItem("loginUserId")) {
+  location.href = "login.html";
+}
+
+showProfile();
+</script>
 </body>
 </html>
