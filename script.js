@@ -1,4 +1,4 @@
-// ユーザーデータ取得・保存（localStorage）
+// localStorage ユーザーデータ
 function getUsers() { return JSON.parse(localStorage.getItem("users") || "{}"); }
 function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
 
@@ -37,21 +37,34 @@ function logout() {
   location.href = "login.html";
 }
 
-// 投稿（テキスト＋画像＋動画）
+// 投稿（テキスト＋画像ファイル＋動画URL）
 function uploadPost() {
   const text = document.getElementById("postContent").value;
-  const img = document.getElementById("imageUrl").value;
+  const fileInput = document.getElementById("imageFile");
   const video = document.getElementById("videoUrl").value;
-  if (!text && !img && !video) return alert("何か入力してください");
+
+  if (!text && !fileInput.files.length && !video) return alert("何か入力してください");
 
   const user = localStorage.getItem("loginUserId");
   let users = getUsers();
-  users[user].posts.push({ text, img, video });
-  saveUsers(users);
 
-  loadPosts();
+  // 画像を base64 に変換
+  if (fileInput.files.length) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      users[user].posts.push({ text, img: e.target.result, video });
+      saveUsers(users);
+      loadPosts();
+    }
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    users[user].posts.push({ text, img: null, video });
+    saveUsers(users);
+    loadPosts();
+  }
+
   document.getElementById("postContent").value = "";
-  document.getElementById("imageUrl").value = "";
+  fileInput.value = "";
   document.getElementById("videoUrl").value = "";
 }
 
