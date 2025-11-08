@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MySNS — ログイン</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="script.js" defer></script>
+</head>
+<body class="auth-page">
+<div class="card">
+<h2>ログイン</h2>
+<input id="loginName" placeholder="ユーザー名">
+<input id="loginPass" placeholder="パスコード" type="password">
+<button id="loginBtn">ログイン</button>
+<p>アカウントがない？ <a href="signup.html">作成する</a></p>
+<div id="loginMsg" class="msg"></div>
+</div>
+</body>
+</html>
