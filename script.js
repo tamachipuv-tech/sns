@@ -4,7 +4,7 @@
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx-9PcTL3xc6Dlbiw_uZawVCT7cOROoki10HMpahMnoG_CpdcNkVlMXy7nFOfjCzXWVOA/exec";
 
 // ========================================
-// 2. db ラッパー（Firebase風） - 一番上
+// 2. db ラッパー（Firebase風）
 // ========================================
 const db = {
   collection: function(collectionName) {
@@ -22,9 +22,10 @@ const db = {
             return fetch(GAS_URL)
               .then(res => res.json())
               .then(users => {
+                const data = users[docId] || {}; // 存在しない場合は空オブジェクト
                 return {
-                  exists: users[docId] !== undefined,
-                  data: () => ({ password: users[docId]?.password, post: users[docId]?.post })
+                  exists: !!users[docId],
+                  data: () => ({ password: data.password, post: data.post })
                 };
               });
           }
@@ -55,21 +56,22 @@ function signup() {
 }
 
 // ========================================
-// 4. ログイン
+// 4. ログイン（修正版）
 // ========================================
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  if (!username || !password) return alert("入力しください");
+  if (!username || !password) return alert("入力してください");
 
   db.collection("users").doc(username).get()
     .then(doc => {
-      if (doc.exists && doc.data().password === password) {
+      const userData = doc.data();
+      if (doc.exists && userData.password === password) {
         localStorage.setItem("loginUserId", username);
         location.href = "index.html";
       } else {
-        alert("ユーザー名かパスワードが間違っています");
+        alert("アカウント名またはパスワードが間違っています");
       }
     });
 }
