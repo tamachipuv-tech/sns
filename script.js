@@ -1,5 +1,5 @@
 // ========================================
-// 1. GAS URL（ここを自分のWebアプリURLに置き換える）
+// 1. GAS URL（スプレッドシートのWebアプリURLに置き換え済み）
 // ========================================
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx-9PcTL3xc6Dlbiw_uZawVCT7cOROoki10HMpahMnoG_CpdcNkVlMXy7nFOfjCzXWVOA/exec";
 
@@ -11,22 +11,20 @@ const db = {
     return {
       doc: function(docId) {
         return {
-          // サインアップ用
           set: function(data) {
             return fetch(GAS_URL, {
               method: "POST",
-              body: JSON.stringify({ username: docId, password: data.password })
+              body: JSON.stringify({ username: docId, password: data.password || null, post: data.post || null })
             })
             .then(res => res.json());
           },
-          // ログイン用
           get: function() {
             return fetch(GAS_URL)
               .then(res => res.json())
               .then(users => {
                 return {
                   exists: users[docId] !== undefined,
-                  data: () => ({ password: users[docId] })
+                  data: () => ({ password: users[docId]?.password, post: users[docId]?.post })
                 };
               });
           }
@@ -42,6 +40,7 @@ const db = {
 function signup() {
   const username = document.getElementById("newUsername").value;
   const password = document.getElementById("newPassword").value;
+
   if (!username || !password) return alert("入力してください");
 
   db.collection("users").doc(username).set({ password })
@@ -61,6 +60,7 @@ function signup() {
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+
   if (!username || !password) return alert("入力してください");
 
   db.collection("users").doc(username).get()
@@ -83,26 +83,23 @@ function logout() {
 }
 
 // ========================================
-// 6. 投稿（例：簡易版）
+// 6. 投稿
 // ========================================
 function uploadPost() {
   const content = document.getElementById("postContent").value;
   const user = localStorage.getItem("loginUserId");
+
   if (!content) return alert("投稿内容を入力");
 
-  fetch(GAS_URL, {
-    method: "POST",
-    body: JSON.stringify({ username: user, post: content })
-  })
-  .then(res => res.json())
-  .then(() => {
-    alert("投稿しました");
-    location.href = "index.html";
-  });
+  db.collection("users").doc(user).set({ password: null, post: content })
+    .then(() => {
+      alert("投稿しました");
+      location.href = "index.html";
+    });
 }
 
 // ========================================
-// 7. 投稿表示（簡易）
+// 7. 投稿表示
 // ========================================
 function loadPosts() {
   const postsDiv = document.getElementById("posts");
@@ -112,9 +109,9 @@ function loadPosts() {
     .then(res => res.json())
     .then(data => {
       postsDiv.innerHTML = "";
-      for (let key in data) {
-        if (data[key].post) {
-          postsDiv.innerHTML += `<p><strong>${key}</strong>: ${data[key].post}</p>`;
+      for (let username in data) {
+        if (data[username]?.post) {
+          postsDiv.innerHTML += `<p><strong>${username}</strong>: ${data[username].post}</p>`;
         }
       }
     });
