@@ -1,10 +1,10 @@
 // ========================================
-// 1. GAS URL（スプレッドシートのWebアプリURLに置き換え済み）
+// 1. GAS URL
 // ========================================
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx-9PcTL3xc6Dlbiw_uZawVCT7cOROoki10HMpahMnoG_CpdcNkVlMXy7nFOfjCzXWVOA/exec";
 
 // ========================================
-// 2. db ラッパー（Firebase風）
+// 2. db ラッパー（Firebase風） - 一番上
 // ========================================
 const db = {
   collection: function(collectionName) {
@@ -61,7 +61,7 @@ function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  if (!username || !password) return alert("入力してください");
+  if (!username || !password) return alert("入力しください");
 
   db.collection("users").doc(username).get()
     .then(doc => {
