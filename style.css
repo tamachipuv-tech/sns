@@ -1,10 +1,13 @@
-/* 全体背景とフォント */
+/* ===============================
+   全体設定
+   =============================== */
 body {
   font-family: 'Helvetica', 'Arial', sans-serif;
   background: #121212;
   margin: 0;
   padding: 0;
   color: #e0e0e0;
+  box-sizing: border-box;
 }
 
 /* ヘッダー */
@@ -28,6 +31,7 @@ header {
   gap: 10px;
   font-weight: bold;
 }
+
 #profileInfo img {
   width: 45px;
   height: 45px;
@@ -36,7 +40,9 @@ header {
   border: 2px solid #ffffff55;
 }
 
-/* 投稿フォーム */
+/* ===============================
+   投稿フォーム
+   =============================== */
 #postForm {
   background: #1f1f1f;
   margin: 20px auto;
@@ -48,7 +54,6 @@ header {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  box-sizing: border-box;
 }
 
 #postForm textarea,
@@ -60,10 +65,11 @@ header {
   border: 1px solid #444;
   background: #121212;
   color: #e0e0e0;
-  box-sizing: border-box;
 }
 
-/* 投稿カード */
+/* ===============================
+   投稿カード
+   =============================== */
 .post-card {
   background: #ffffff;
   margin: 15px auto;
@@ -74,7 +80,6 @@ header {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: transform 0.2s, box-shadow 0.2s;
   color: #121212;
-  box-sizing: border-box;
 }
 
 .post-card:hover {
@@ -169,7 +174,7 @@ header {
   word-wrap: break-word;
 }
 
-/* テキスト入力 */
+/* 入力欄 */
 textarea, input[type="text"] {
   border-radius: 12px;
   border: 1px solid #444;
@@ -177,14 +182,72 @@ textarea, input[type="text"] {
   font-size: 14px;
   background: #1f1f1f;
   color: #e0e0e0;
-  box-sizing: border-box;
 }
 
-/* ボタン */
 button {
   font-family: 'Helvetica', sans-serif;
 }
 
 button:focus {
   outline: none;
+}
+
+/* ===============================
+   サインアップ画面中央揃え
+   =============================== */
+body.signup-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #121212;
+}
+
+.signup-container {
+  background: #1f1f1f;
+  padding: 30px 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.signup-container input[type="text"],
+.signup-container input[type="password"],
+.signup-container textarea,
+.signup-container input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background: #121212;
+  color: #e0e0e0;
+  box-sizing: border-box;
+}
+
+.signup-container button {
+  background: #1da1f2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.signup-container button:hover {
+  background: #0d8ddb;
+}
+
+.signup-container a {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+.signup-container a:hover {
+  text-decoration: underline;
 }
