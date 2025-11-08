@@ -2,24 +2,16 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>サインップ</title>
+<title>サインアップ</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>サインップ</h1>
-
-<!-- 入力欄とボタン -->
-<input type="text" id="newUsername" placeholder="ユーザー名">
-<input type="password" id="newPassword" placeholder="パスワード">
+<h1>サインアップ</h1>
+<input type="text" id="newUsername" placeholder="ユーザー名"><br>
+<input type="password" id="newPassword" placeholder="パスワード"><br>
 <button onclick="signup()">サインアップ</button>
+<p>既にアカウントがある場合は <a href="login.html">ログイン</a></p>
 
-<!-- Firebase + script.js は必ずここ -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
-
-
