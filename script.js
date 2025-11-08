@@ -1,39 +1,36 @@
-// Firebase 設定（自分のプロジェクトに置き換えてね）
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
-};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx-9PcTL3xc6Dlbiw_uZawVCT7cOROoki10HMpahMnoG_CpdcNkVlMXy7nFOfjCzXWVOA/exec"; // コピーしたURLを入れる
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// --- ユーザー登録 ---
+// サインアップ
 function signup() {
   const username = document.getElementById("newUsername").value;
   const password = document.getElementById("newPassword").value;
-  if(!username || !password){ alert("入力してください"); return; }
+  if (!username || !password) return alert("入力してください");
 
-  db.collection("users").doc(username).set({ password })
-    .then(() => {
+  fetch(GAS_URL, {
+    method: "POST",
+    body: JSON.stringify({ username, password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "exists") {
+      alert("そのユーザー名は既に存在します");
+    } else {
       localStorage.setItem("loginUserId", username);
       location.href = "index.html";
-    })
-    .catch(err => alert(err));
+    }
+  });
 }
 
-// --- ログイン ---
+// ログイン
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
-  if(!username || !password){ alert("入力してください"); return; }
+  if (!username || !password) return alert("入力してください");
 
-  db.collection("users").doc(username).get()
-    .then(doc => {
-      if(doc.exists && doc.data().password === password){
+  fetch(GAS_URL)
+    .then(res => res.json())
+    .then(users => {
+      if (users[username] && users[username] === password) {
         localStorage.setItem("loginUserId", username);
         location.href = "index.html";
       } else {
@@ -42,44 +39,8 @@ function login() {
     });
 }
 
-// --- ログアウト ---
+// ログアウト
 function logout() {
   localStorage.removeItem("loginUserId");
   location.href = "login.html";
-}
-
-// --- 投稿 ---
-function uploadPost() {
-  const content = document.getElementById("postContent").value;
-  const user = localStorage.getItem("loginUserId");
-  if(!content) return alert("投稿内容を入力");
-
-  db.collection("posts").add({
-    user,
-    content,
-    createdAt: new Date()
-  }).then(() => {
-    alert("投稿しました");
-    location.href = "index.html";
-  });
-}
-
-// --- 投稿表示 ---
-function loadPosts() {
-  const postsDiv = document.getElementById("posts");
-  postsDiv.innerHTML = "";
-  db.collection("posts").orderBy("createdAt", "desc").get()
-    .then(snapshot => {
-      snapshot.forEach(doc => {
-        const post = doc.data();
-        postsDiv.innerHTML += `<p><strong>${post.user}</strong>: ${post.content}</p>`;
-      });
-    });
-}
-
-// --- プロフィール表示 ---
-function showProfile() {
-  const profileDiv = document.getElementById("profileInfo");
-  const user = localStorage.getItem("loginUserId");
-  profileDiv.innerHTML = `<p>ユーザー名: ${user}</p>`;
 }
