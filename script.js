@@ -1,14 +1,9 @@
-// ユーザーデータの取得
-function getUsers() {
-  return JSON.parse(localStorage.getItem("users") || "{}");
-}
+// ユーザーデータ取得・保存（localStorage）
+function getUsers() { return JSON.parse(localStorage.getItem("users") || "{}"); }
+function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
 
-// ユーザーデータの保存
-function saveUsers(users) {
-  localStorage.setItem("users", JSON.stringify(users));
-}
+// サインアップ / ログイン / ログアウト（前回と同じ）
 
-// サインアップ
 function signup() {
   const username = document.getElementById("newUsername").value;
   const password = document.getElementById("newPassword").value;
@@ -19,12 +14,10 @@ function signup() {
 
   users[username] = { password: password, posts: [] };
   saveUsers(users);
-
   localStorage.setItem("loginUserId", username);
   location.href = "index.html";
 }
 
-// ログイン
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
@@ -39,27 +32,30 @@ function login() {
   }
 }
 
-// ログアウト
 function logout() {
   localStorage.removeItem("loginUserId");
   location.href = "login.html";
 }
 
-// 投稿
+// 投稿（テキスト＋画像＋動画）
 function uploadPost() {
-  const content = document.getElementById("postContent").value;
-  if (!content) return alert("投稿内容を入力");
+  const text = document.getElementById("postContent").value;
+  const img = document.getElementById("imageUrl").value;
+  const video = document.getElementById("videoUrl").value;
+  if (!text && !img && !video) return alert("何か入力してください");
 
   const user = localStorage.getItem("loginUserId");
   let users = getUsers();
-  users[user].posts.push(content);
+  users[user].posts.push({ text, img, video });
   saveUsers(users);
 
   loadPosts();
   document.getElementById("postContent").value = "";
+  document.getElementById("imageUrl").value = "";
+  document.getElementById("videoUrl").value = "";
 }
 
-// 投稿表示
+// 投稿表示（動画・画像対応）
 function loadPosts() {
   const postsDiv = document.getElementById("posts");
   if (!postsDiv) return;
@@ -68,7 +64,10 @@ function loadPosts() {
   let html = "";
   for (let user in users) {
     users[user].posts.forEach(post => {
-      html += `<p><strong>${user}</strong>: ${post}</p>`;
+      html += `<div class="post"><strong>${user}</strong>: ${post.text || ""}<br>`;
+      if (post.img) html += `<img src="${post.img}" class="post-img">`;
+      if (post.video) html += `<iframe class="post-video" src="${post.video}" frameborder="0" allowfullscreen></iframe>`;
+      html += `</div>`;
     });
   }
   postsDiv.innerHTML = html;
