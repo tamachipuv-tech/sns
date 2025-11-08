@@ -1,36 +1,71 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbx-9PcTL3xc6Dlbiw_uZawVCT7cOROoki10HMpahMnoG_CpdcNkVlMXy7nFOfjCzXWVOA/exec"; // コピーしたURLを入れる
+// ========================================
+// 1. GAS URL（ここを自分のWebアプリURLに置き換える）
+// ========================================
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx-9PcTL3xc6Dlbiw_uZawVCT7cOROoki10HMpahMnoG_CpdcNkVlMXy7nFOfjCzXWVOA/exec";
 
-// サインアップ
+// ========================================
+// 2. db ラッパー（Firebase風）
+// ========================================
+const db = {
+  collection: function(collectionName) {
+    return {
+      doc: function(docId) {
+        return {
+          // サインアップ用
+          set: function(data) {
+            return fetch(GAS_URL, {
+              method: "POST",
+              body: JSON.stringify({ username: docId, password: data.password })
+            })
+            .then(res => res.json());
+          },
+          // ログイン用
+          get: function() {
+            return fetch(GAS_URL)
+              .then(res => res.json())
+              .then(users => {
+                return {
+                  exists: users[docId] !== undefined,
+                  data: () => ({ password: users[docId] })
+                };
+              });
+          }
+        }
+      }
+    }
+  }
+};
+
+// ========================================
+// 3. サインアップ
+// ========================================
 function signup() {
   const username = document.getElementById("newUsername").value;
   const password = document.getElementById("newPassword").value;
   if (!username || !password) return alert("入力してください");
 
-  fetch(GAS_URL, {
-    method: "POST",
-    body: JSON.stringify({ username, password })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.status === "exists") {
-      alert("そのユーザー名は既に存在します");
-    } else {
-      localStorage.setItem("loginUserId", username);
-      location.href = "index.html";
-    }
-  });
+  db.collection("users").doc(username).set({ password })
+    .then(res => {
+      if (res.status === "exists") {
+        alert("そのユーザー名は既に存在します");
+      } else {
+        localStorage.setItem("loginUserId", username);
+        location.href = "index.html";
+      }
+    });
 }
 
-// ログイン
+// ========================================
+// 4. ログイン
+// ========================================
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
   if (!username || !password) return alert("入力してください");
 
-  fetch(GAS_URL)
-    .then(res => res.json())
-    .then(users => {
-      if (users[username] && users[username] === password) {
+  db.collection("users").doc(username).get()
+    .then(doc => {
+      if (doc.exists && doc.data().password === password) {
         localStorage.setItem("loginUserId", username);
         location.href = "index.html";
       } else {
@@ -39,8 +74,59 @@ function login() {
     });
 }
 
-// ログアウト
+// ========================================
+// 5. ログアウト
+// ========================================
 function logout() {
   localStorage.removeItem("loginUserId");
   location.href = "login.html";
+}
+
+// ========================================
+// 6. 投稿（例：簡易版）
+// ========================================
+function uploadPost() {
+  const content = document.getElementById("postContent").value;
+  const user = localStorage.getItem("loginUserId");
+  if (!content) return alert("投稿内容を入力");
+
+  fetch(GAS_URL, {
+    method: "POST",
+    body: JSON.stringify({ username: user, post: content })
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert("投稿しました");
+    location.href = "index.html";
+  });
+}
+
+// ========================================
+// 7. 投稿表示（簡易）
+// ========================================
+function loadPosts() {
+  const postsDiv = document.getElementById("posts");
+  if (!postsDiv) return;
+
+  fetch(GAS_URL)
+    .then(res => res.json())
+    .then(data => {
+      postsDiv.innerHTML = "";
+      for (let key in data) {
+        if (data[key].post) {
+          postsDiv.innerHTML += `<p><strong>${key}</strong>: ${data[key].post}</p>`;
+        }
+      }
+    });
+}
+
+// ========================================
+// 8. プロフィール表示
+// ========================================
+function showProfile() {
+  const profileDiv = document.getElementById("profileInfo");
+  if (!profileDiv) return;
+
+  const user = localStorage.getItem("loginUserId");
+  profileDiv.innerHTML = `<p>ユーザー名: ${user}</p>`;
 }
