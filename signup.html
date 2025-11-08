@@ -1,21 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MySNS — サインアップ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySNS - サインアップ</title>
 <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>サインアップ</h1>
+
+<input type="text" id="newUsername" placeholder="ユーザー名">
+<input type="password" id="newPassword" placeholder="パスワード">
+<button onclick="signup()">サインアップ</button>
+<p>既にアカウントある？ <a href="login.html">ログイン</a></p>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-<script src="script.js" defer></script>
-</head>
-<body class="auth-page">
-<div class="card">
-<h2>アカウント作成</h2>
-<input id="signupName" placeholder="ユーザー名">
-<input id="signupPass" placeholder="パスコード（4〜）" type="password">
-<button id="signupBtn">作成</button>
-<div id="signupMsg" class="msg"></div>
-</div>
+<script src="script.js"></script>
 </body>
 </html>
