@@ -6,13 +6,20 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>投稿一覧</h1>
-<div id="profileInfo"></div>
-<div id="posts"></div>
+<header>
+  <h1>MySNS</h1>
+  <div id="profileInfo"></div>
+  <button onclick="logout()">ログアウト</button>
+</header>
 
-<textarea id="postContent" placeholder="ここに投稿"></textarea><br>
-<button onclick="uploadPost()">投稿</button>
-<button onclick="logout()">ログアウト</button>
+<section id="postForm">
+  <textarea id="postContent" placeholder="投稿内容"></textarea><br>
+  <input type="text" id="imageUrl" placeholder="画像URL">
+  <input type="text" id="videoUrl" placeholder="動画URL">
+  <button onclick="uploadPost()">投稿</button>
+</section>
+
+<section id="posts"></section>
 
 <script src="script.js"></script>
 <script>
