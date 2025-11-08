@@ -1,25 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MySNS — 投稿</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySNS - 投稿</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
-<script src="script.js" defer></script>
 </head>
 <body>
-<header class="topbar"><a href="index.html">← 戻る</a></header>
-<main class="container single">
-<div class="panel">
-<h2>新しい投稿</h2>
-<textarea id="postText" placeholder="今何してる？"></textarea>
-<input id="mediaInput" type="file" accept="image/*,video/*">
-<button id="postSubmit">投稿する</button>
-<div id="postMsg" class="msg"></div>
-</div>
-</main>
+
+<h1>新規投稿</h1>
+<textarea id="postContent" placeholder="内容を入力"></textarea>
+<button onclick="uploadPost()">投稿</button>
+<button onclick="logout()">ログアウト</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="script.js"></script>
+
+<script>
+if (!localStorage.getItem("loginUserId")) {
+  location.href = "login.html";
+}
+</script>
 </body>
 </html>
