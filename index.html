@@ -2,36 +2,22 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>MySNS</title>
+<title>投稿ツール</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>MySNS</h1>
-  <div id="profileInfo"></div>
-  <button onclick="logout()">ログアウト</button>
-</header>
+<div class="container">
+  <h2>投稿フォーム</h2>
+  <input type="text" id="nameInput" placeholder="名前">
+  <textarea id="textInput" placeholder="本文"></textarea>
+  <input type="text" id="imgInput" placeholder="画像URL (任意)">
+  <button onclick="postSubmit()">投稿</button>
+</div>
 
-<section id="profileEdit">
-  <h3>プロフィール編集</h3>
-  <input type="file" id="newIconFile" accept="image/*">
-  <textarea id="newBioText" placeholder="自己紹介"></textarea>
-  <button onclick="editProfile()">更新</button>
-</section>
-
-<section id="postForm">
-  <textarea id="postContent" placeholder="投稿内容"></textarea><br>
-  <input type="file" id="imageFile" accept="image/*"><br>
-  <input type="text" id="videoUrl" placeholder="動画URL">
-  <button onclick="uploadPost()">投稿</button>
-</section>
-
-<section id="posts"></section>
+<div class="container" id="postsContainer">
+  <h2>投稿一覧</h2>
+</div>
 
 <script src="script.js"></script>
-<script>
-  showProfile();
-  loadPosts();
-</script>
 </body>
 </html>
