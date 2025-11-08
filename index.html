@@ -12,6 +12,13 @@
   <button onclick="logout()">ログアウト</button>
 </header>
 
+<section id="profileEdit">
+  <h3>プロフィール編集</h3>
+  <input type="file" id="newIconFile" accept="image/*">
+  <textarea id="newBioText" placeholder="自己紹介"></textarea>
+  <button onclick="editProfile()">更新</button>
+</section>
+
 <section id="postForm">
   <textarea id="postContent" placeholder="投稿内容"></textarea><br>
   <input type="file" id="imageFile" accept="image/*"><br>
