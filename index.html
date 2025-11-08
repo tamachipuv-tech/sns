@@ -2,28 +2,22 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySNS - ホーム</title>
+<title>MySNS</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>MySNS ホーム</h1>
-<button onclick="logout()">ログアウト</button>
-
+<h1>投稿一覧</h1>
+<div id="profileInfo"></div>
 <div id="posts"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<textarea id="postContent" placeholder="ここに投稿"></textarea><br>
+<button onclick="uploadPost()">投稿</button>
+<button onclick="logout()">ログアウト</button>
+
 <script src="script.js"></script>
-
 <script>
-if (!localStorage.getItem("loginUserId")) {
-  location.href = "login.html";
-}
-
-// 投稿を表示
-loadPosts();
+  showProfile();
+  loadPosts();
 </script>
 </body>
 </html>
