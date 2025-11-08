@@ -1,69 +1,85 @@
-// ---- Firebase 設定（ここを置き換えてください） ----
-const ref = await db.collection('users').add({
-username: name,
-passcodeHash: passHash,
-bio: '',
-followers: [],
-following: [],
-createdAt: nowTimestamp()
-});
+// Firebase 設定（自分のプロジェクトに置き換えてね）
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
 
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-msg.textContent='作成しました。ログイン画面へ移動します';
-setTimeout(()=>location.href='login.html',800);
-});
+// --- ユーザー登録 ---
+function signup() {
+  const username = document.getElementById("newUsername").value;
+  const password = document.getElementById("newPassword").value;
+  if(!username || !password){ alert("入力してください"); return; }
+
+  db.collection("users").doc(username).set({ password })
+    .then(() => {
+      localStorage.setItem("loginUserId", username);
+      location.href = "index.html";
+    })
+    .catch(err => alert(err));
 }
 
+// --- ログイン ---
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  if(!username || !password){ alert("入力してください"); return; }
 
-// Login page
-if(path=="login.html"){
-document.getElementById('loginBtn').addEventListener('click', async ()=>{
-const name = document.getElementById('loginName').value.trim();
-const pass = document.getElementById('loginPass').value;
-const msg = document.getElementById('loginMsg'); msg.textContent='';
-if(!name||!pass){ msg.textContent='入力してください'; return; }
-
-
-const q = await db.collection('users').where('username','==',name).get();
-if(q.empty){ msg.textContent='ユーザーが見つかりません'; return; }
-const doc = q.docs[0];
-const data = doc.data();
-const passHash = await sha256(pass);
-if(passHash !== data.passcodeHash){ msg.textContent='パスコードが違います'; return; }
-
-
-const userDoc = { id: doc.id, ...data };
-setSession(userDoc);
-location.href='index.html';
-});
+  db.collection("users").doc(username).get()
+    .then(doc => {
+      if(doc.exists && doc.data().password === password){
+        localStorage.setItem("loginUserId", username);
+        location.href = "index.html";
+      } else {
+        alert("ユーザー名かパスワードが間違っています");
+      }
+    });
 }
 
+// --- ログアウト ---
+function logout() {
+  localStorage.removeItem("loginUserId");
+  location.href = "login.html";
+}
 
-// Index page behavior
-if(path=="index.html"||path===''){
-const user = getSession();
-if(!user){ location.href='login.html'; return; }
+// --- 投稿 ---
+function uploadPost() {
+  const content = document.getElementById("postContent").value;
+  const user = localStorage.getItem("loginUserId");
+  if(!content) return alert("投稿内容を入力");
 
+  db.collection("posts").add({
+    user,
+    content,
+    createdAt: new Date()
+  }).then(() => {
+    alert("投稿しました");
+    location.href = "index.html";
+  });
+}
 
-document.getElementById('logoutBtn').addEventListener('click', ()=>{ clearSession(); location.href='login.html'; });
+// --- 投稿表示 ---
+function loadPosts() {
+  const postsDiv = document.getElementById("posts");
+  postsDiv.innerHTML = "";
+  db.collection("posts").orderBy("createdAt", "desc").get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        const post = doc.data();
+        postsDiv.innerHTML += `<p><strong>${post.user}</strong>: ${post.content}</p>`;
+      });
+    });
+}
 
-
-// 検索
-const searchInput = document.getElementById('searchUserInput');
-searchInput.addEventListener('input', async ()=>{
-const qv = searchInput.value.trim();
-const box = document.getElementById('searchResults'); box.innerHTML='';
-if(qv.length<1) return;
-const q = await db.collection('users').where('username','>=',qv).where('username','<',qv+'\uf8ff').limit(10).get();
-q.forEach(doc=>{
-const d = doc.data();
-const el = document.createElement('div'); el.className='userRow';
-el.innerHTML = `<strong>${d.username}</strong> <button data-id="${doc.id}">プロフィール</button>`;
-el.querySelector('button').addEventListener('click', ()=>{ location.href=`profile.html?uid=${doc.id}`; });
-box.appendChild(el);
-});
-});
-
-
-// タイムライン表示（フォロー中のユーザー & 自分の投稿）
-const timelineEl = document.getElementById('timeline');
+// --- プロフィール表示 ---
+function showProfile() {
+  const profileDiv = document.getElementById("profileInfo");
+  const user = localStorage.getItem("loginUserId");
+  profileDiv.innerHTML = `<p>ユーザー名: ${user}</p>`;
+}
