@@ -66,8 +66,8 @@ function login() {
 
   db.collection("users").doc(username).get()
     .then(doc => {
-      const userData = doc.data();
-      if (doc.exists && userData.password === password) {
+      const userPassword = doc.data(); // 文字列として返ってくる
+      if (doc.exists && userPassword === password) {
         localStorage.setItem("loginUserId", username);
         location.href = "index.html";
       } else {
