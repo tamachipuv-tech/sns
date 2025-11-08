@@ -1,53 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MySNS — ホーム</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySNS - ホーム</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
-<script src="script.js" defer></script>
 </head>
 <body>
-<header class="topbar">
-<h1 class="logo">MySNS</h1>
-<nav>
-<a href="upload.html">投稿</a>
-<a href="profile.html">プロフィール</a>
-<button id="logoutBtn">ログアウト</button>
-</nav>
-</header>
 
+<h1>MySNS ホーム</h1>
+<button onclick="logout()">ログアウト</button>
 
-<main class="container">
-<section class="left">
-<div class="panel">
-<h2>おすすめ</h2>
-<div id="recommend"></div>
-</div>
-</section>
+<div id="posts"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="script.js"></script>
 
-<section class="center">
-<div class="panel">
-<h2>タイムライン</h2>
-<div id="timeline"></div>
-</div>
-</section>
+<script>
+if (!localStorage.getItem("loginUserId")) {
+  location.href = "login.html";
+}
 
-
-<aside class="right">
-<div class="panel">
-<h3>検索ユーザー</h3>
-<input id="searchUserInput" placeholder="ユーザー名で検索">
-<div id="searchResults"></div>
-</div>
-</aside>
-</main>
-
-
-<footer class="footer">© MySNS</footer>
+// 投稿を表示
+loadPosts();
+</script>
 </body>
 </html>
